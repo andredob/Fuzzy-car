@@ -1,0 +1,112 @@
+/*
+	Example: A tip calculation FIS (fuzzy inference system)
+	Calculates tip based on 'servie' and 'food'
+
+	If you want to about this example (and fuzzy logic), please 
+	read Matlab's tutorial on fuzzy logic toolbox 
+	http://www.mathworks.com/access/helpdesk/help/pdf_doc/fuzzy/fuzzy.pdf
+
+									Pablo Cingolani 
+									pcingola@users.sourceforge.net
+*/
+
+FUNCTION_BLOCK driver	// Block definition (there may be more than one block per file)
+
+VAR_INPUT				// Define input variables
+	centered : REAL;
+        carAngle : REAL;
+        backwards : REAL;
+END_VAR
+
+VAR_OUTPUT				// Define output variable
+	newWheelAngle : REAL;
+END_VAR
+
+FUZZIFY centered			// Fuzzify input variable 'centered': {'left', 'centerLeft' , 'center', 'centerRight', 'right'}
+	TERM left := (0, 1) (10, 1) (35, 0); 
+	TERM centerLeft := (30, 0) (40,1) (50,0);
+	TERM center := (45, 0) (50, 1) (55,0);
+        TERM centerRight := (50,0) (60,1) (70,0);
+        TERM right := (65,0) (90,1) (100,1);
+END_FUZZIFY
+
+FUZZIFY carAngle 
+	TERM RB := (-100,0) (-55, 1) (10,0); 
+	TERM RU := (-10,0) (20,1) (50,0); 
+        TERM RV := (40,0) (65,1) (90,0); 
+        TERM VE := (80,0) (90,1) (100,0);
+        TERM LV := (90,0) (115,1) (140,0);
+        TERM LU := (130,0) (160,1) (190,0);
+        TERM LB := (160,0) (215,1) (270,0);
+END_FUZZIFY
+
+FUZZIFY backwards
+        TERM TRUE := (0,1) (25,1) (60,0);
+        TERM FALSE := (40,0) (75,1) (100,1);
+END_FUZZIFY
+
+DEFUZZIFY newWheelAngle
+        TERM NB := (-30,1) (-15,0);
+        TERM NM := (-25,0) (-15,1) (-5,0);
+        TERM NS := (-15,0) (-5,1) (0,0);
+        TERM ZE := (-5,0) (0,1) (5,0);
+        TERM PS := (0,0) (5,1) (15,0);
+        TERM PM := (5,0) (15,1) (25,0);
+        TERM PB := (15,0) (30,1);
+        METHOD : COG;
+        DEFAULT := 0;
+END_DEFUZZIFY
+
+RULEBLOCK No1
+	AND : MIN;			// Use 'min' for 'and' (also implicit use 'max' for 'or' to fulfill DeMorgan's Law)
+	ACT : MIN;			// Use 'min' activation method
+	ACCU : MAX;			// Use 'max' accumulation method
+        
+        //LEFT
+        RULE 1 : IF centered IS left AND carAngle IS RB THEN newWheelAngle IS PS;
+        RULE 2 : IF centered IS left AND carAngle IS RU THEN newWheelAngle IS NS;
+        RULE 3 : IF centered IS left AND carAngle IS RV THEN newWheelAngle IS NM;
+        RULE 4 : IF centered IS left AND carAngle IS VE THEN newWheelAngle IS NM;
+        RULE 5 : IF centered IS left AND carAngle IS LV THEN newWheelAngle IS NB;
+        RULE 6 : IF centered IS left AND carAngle IS LU THEN newWheelAngle IS NB;
+        RULE 7 : IF centered IS left AND carAngle IS LB THEN newWheelAngle IS NB;
+        
+        //CENTERLEFT
+        RULE 8 : IF centered IS centerLeft AND carAngle IS RB THEN newWheelAngle IS PM;
+        RULE 9 : IF centered IS centerLeft AND carAngle IS RU THEN newWheelAngle IS PS;
+        RULE 10 : IF centered IS centerLeft AND carAngle IS RV THEN newWheelAngle IS NS;
+        RULE 11 : IF centered IS centerLeft AND carAngle IS VE THEN newWheelAngle IS NM;
+        RULE 12 : IF centered IS centerLeft AND carAngle IS LV THEN newWheelAngle IS NM;
+        RULE 13 : IF centered IS centerLeft AND carAngle IS LU THEN newWheelAngle IS NB;
+        RULE 14 : IF centered IS centerLeft AND carAngle IS LB THEN newWheelAngle IS NB;
+        
+        //CENTER
+        RULE 15 : IF centered IS center AND carAngle IS RB THEN newWheelAngle IS PB;
+        RULE 16 : IF centered IS center AND carAngle IS RU THEN newWheelAngle IS PB;
+        RULE 17 : IF centered IS center AND carAngle IS RV THEN newWheelAngle IS PM;
+        RULE 18 : IF centered IS center AND carAngle IS VE THEN newWheelAngle IS ZE;
+        RULE 19 : IF centered IS center AND carAngle IS LV THEN newWheelAngle IS NM;
+        RULE 20 : IF centered IS center AND carAngle IS LU THEN newWheelAngle IS NB;
+        RULE 21 : IF centered IS center AND carAngle IS LB THEN newWheelAngle IS NB;
+        
+        //CENTERRIGHT
+        RULE 22 : IF centered IS centerRight AND carAngle IS RB THEN newWheelAngle IS PB;
+        RULE 23 : IF centered IS centerRight AND carAngle IS RU THEN newWheelAngle IS PB;
+        RULE 24 : IF centered IS centerRight AND carAngle IS RV THEN newWheelAngle IS PM;
+        RULE 25 : IF centered IS centerRight AND carAngle IS VE THEN newWheelAngle IS PM;
+        RULE 26 : IF centered IS centerRight AND carAngle IS LV THEN newWheelAngle IS PS;
+        RULE 27 : IF centered IS centerRight AND carAngle IS LU THEN newWheelAngle IS NS;
+        RULE 28 : IF centered IS centerRight AND carAngle IS LB THEN newWheelAngle IS NM;
+        
+        //RIGHT
+	RULE 29 : IF centered IS right AND carAngle IS RB THEN newWheelAngle IS PB;
+        RULE 30 : IF centered IS right AND carAngle IS RU THEN newWheelAngle IS PB;
+        RULE 31 : IF centered IS right AND carAngle IS RV THEN newWheelAngle IS PB;
+        RULE 32 : IF centered IS right AND carAngle IS VE THEN newWheelAngle IS PM;
+        RULE 33 : IF centered IS right AND carAngle IS LV THEN newWheelAngle IS PM;
+        RULE 34 : IF centered IS right AND carAngle IS LU THEN newWheelAngle IS PS;
+        RULE 35 : IF centered IS right AND carAngle IS LB THEN newWheelAngle IS NS;
+END_RULEBLOCK
+
+END_FUNCTION_BLOCK
+
