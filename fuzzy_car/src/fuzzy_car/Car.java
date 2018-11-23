@@ -46,6 +46,7 @@ public class Car extends JPanel {
     }
 
     double normalizeAngle(double newAcar) {
+       
         if (newAcar > 270) {
             double aux = newAcar - 270;
             return -90 + aux;
