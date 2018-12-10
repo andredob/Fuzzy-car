@@ -32,8 +32,8 @@ public class ParkingLot extends JPanel implements Runnable {
     Driver driver;
     Car car;
     JFrame jf = new JFrame();
-    int docX;
-    int docSize;
+    double docX;
+    double docSize;
 
     public ParkingLot() {
         jf.setSize(new Dimension(this.getWidth(), this.getHeight()));
@@ -46,25 +46,25 @@ public class ParkingLot extends JPanel implements Runnable {
     void addCar() {
         double aCar = Math.random() * (270 - 90);
         double aWeel = 0;
-        int x = (int) (Math.random() * (this.getWidth() - 10));
-        int y = (int) (Math.random() * (this.getHeight() - 10));
-        int ray = 20;
+        double x =  (Math.random() * (this.getWidth() - docSize*2)) + docSize*2;
+        int y = (int) (Math.random() * (this.getHeight())) + 100;
+        int ray = 50;
         car = new Car(aCar, aWeel, x, y, ray);
     }
 
     void addDoc() {
-        docSize = car.r;
-        docX = (int) (Math.random() * (1000)) - docSize;
+        docSize = car.r * 1.5;
+        docX =  (Math.random() * (1000)) - docSize;
     }
 
 
     double normalize(double posX) {
-        double erro = posX - docX;
-        if(erro > 0){
-            erro -= docSize;
-        } else{
-            erro -= docSize * 2.5;
-        }
+        double erro = posX - docX - docSize;
+//        if(erro > 0){
+//            erro -= docSize;
+//        } else{
+//            erro -= docSize * 2.5;
+//        }
         posX = erro / 10;
         return posX;
     }
@@ -72,7 +72,7 @@ public class ParkingLot extends JPanel implements Runnable {
     void paintBackground(Graphics g2) {
         g2.setColor(Color.LIGHT_GRAY);
         g2.fillRect(0, 0, this.getWidth(), this.getHeight() / 2);
-        g2.setColor(Color.GREEN);
+        g2.setColor(Color.LIGHT_GRAY);
         g2.fillRect(0, this.getHeight() / 2, this.getWidth(), this.getHeight());
     }
     boolean b = true;
@@ -85,7 +85,7 @@ public class ParkingLot extends JPanel implements Runnable {
         }
         b = false;
         g2.setColor(Color.RED);
-        g2.drawRect(docX + docSize / 2, 0, docSize, docSize);
+        g2.drawRect((int) (docX + docSize / 2), 0,(int) docSize, (int) docSize);
 
         car.draw(g2);
     }

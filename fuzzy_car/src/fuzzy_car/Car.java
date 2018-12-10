@@ -18,11 +18,11 @@ public class Car extends JPanel {
     double velocity;
     boolean backwards = false;
 
-    public Car(double aCar, double aWheel, int x, int y, int r) {
+    public Car(double aCar, double aWheel, double x, double y, int r) {
         this.aCar = normalizeAngle(aCar);
         this.aWheel = aWheel;
-        this.x = x;
-        this.y = y;
+        this.x = (int)x;
+        this.y = (int)y;
         this.r = r;
         velocity = 0.5;
     }
