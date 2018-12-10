@@ -41,7 +41,7 @@ public class Car extends JPanel {
         double newAcar = aWheel + aCar;
         x = newX;
         y = newY;
-        System.out.println(x);
+        //System.out.println(x);
         aCar = normalizeAngle(newAcar);
     }
 

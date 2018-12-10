@@ -15,7 +15,6 @@ FUNCTION_BLOCK driver	// Block definition (there may be more than one block per 
 VAR_INPUT				// Define input variables
 	centered : REAL;
         carAngle : REAL;
-        backwards : REAL;
 END_VAR
 
 VAR_OUTPUT				// Define output variable
@@ -23,11 +22,11 @@ VAR_OUTPUT				// Define output variable
 END_VAR
 
 FUZZIFY centered			// Fuzzify input variable 'centered': {'left', 'centerLeft' , 'center', 'centerRight', 'right'}
-	TERM left := (0, 1) (10, 1) (35, 0); 
-	TERM centerLeft := (30, 0) (40,1) (50,0);
-	TERM center := (45, 0) (50, 1) (55,0);
-        TERM centerRight := (50,0) (60,1) (70,0);
-        TERM right := (65,0) (90,1) (100,1);
+	TERM left := (-50,1) (-40, 1) (-15,0); //(-50,1) (-40, 1) (-15,0)
+	TERM centerLeft := (-20 ,0) (-10,1) (0, 0); //(-20 ,0) (-10,1) (0, 0)
+	TERM center := (-5 ,0) (0 ,1) (5 ,0); //(-5 ,0) (0 ,1) (5 ,0)
+        TERM centerRight := (0, 0) (10, 1) (20, 0); //(0, 0) (10, 1) (20, 1)
+        TERM right := (15 , 0) (40, 1) (50, 1); //(15 , 0) (40, 1) (50, 1)
 END_FUZZIFY
 
 FUZZIFY carAngle 
@@ -40,10 +39,6 @@ FUZZIFY carAngle
         TERM LB := (160,0) (215,1) (270,0);
 END_FUZZIFY
 
-FUZZIFY backwards
-        TERM TRUE := (0,1) (25,1) (60,0);
-        TERM FALSE := (40,0) (75,1) (100,1);
-END_FUZZIFY
 
 DEFUZZIFY newWheelAngle
         TERM NB := (-30,1) (-15,0);

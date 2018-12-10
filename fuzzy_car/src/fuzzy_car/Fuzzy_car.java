@@ -12,8 +12,8 @@ public class Fuzzy_car {
 
     
     public static void main(String[] args) {
-        int w = 500;
-        int h = 500;
+        int w = 1000;
+        int h = 1000;
         JFrame jf = new JFrame();
         jf.setSize(new Dimension(w, h));
         jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

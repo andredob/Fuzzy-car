@@ -40,7 +40,7 @@ public class ParkingLot extends JPanel implements Runnable {
         jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         addCar();
         addDoc();
-        driver = new Driver(car.aCar, calcErro(), car);
+        driver = new Driver(car.aCar, normalize(car.x), car);
     }
 
     void addCar() {
@@ -53,21 +53,20 @@ public class ParkingLot extends JPanel implements Runnable {
     }
 
     void addDoc() {
-        Random r = new Random();
         docSize = car.r;
-        docX = (500 / 2) - (docSize);
+        docX = (int) (Math.random() * (1000)) - docSize;
     }
 
-    double calcErro() {
-        double xError = Math.abs(docX - car.x);
-        return normalizedCentered(xError);
-    }
 
-    double normalizedCentered(double xError) {
-        xError = xError / 5;
-        //System.out.println(xError);
-        return xError;
-
+    double normalize(double posX) {
+        double erro = posX - docX;
+        if(erro > 0){
+            erro -= docSize;
+        } else{
+            erro -= docSize * 2.5;
+        }
+        posX = erro / 10;
+        return posX;
     }
 
     void paintBackground(Graphics g2) {
@@ -98,10 +97,11 @@ public class ParkingLot extends JPanel implements Runnable {
             try {
                 car.move();
                 repaint();
-                driver.drive(car.aCar, normalizedCentered(car.x), car);
-                Thread.sleep(200);
+                driver.drive(car.aCar, normalize(car.x));
+                Thread.sleep(20);
                 if (car.y <= 20) {
                     b = true;
+                    addDoc();
                     addCar();
                 }
             } catch (InterruptedException ex) {

@@ -27,13 +27,13 @@ public class Driver {
     String fileName = "src/tipper/tipper.fcl";
     FIS fis = FIS.load(fileName, true);
 
-    void drive(double aCar, double x, Car car) {
+    void drive(double aCar, double x) {
         fis.setVariable("carAngle", aCar);
         fis.setVariable("centered", x);
-        fis.setVariable("backwards", 100);
-        
+        System.out.println(x);
+
         fis.evaluate();
         Variable wAngle = fis.getVariable("newWheelAngle");
-        car.aWheel = wAngle.defuzzify();
+        ParkingLot.getInstance().car.aWheel = wAngle.defuzzify();
     }
 }
