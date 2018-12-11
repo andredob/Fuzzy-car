@@ -46,25 +46,19 @@ public class ParkingLot extends JPanel implements Runnable {
     void addCar() {
         double aCar = Math.random() * (270 - 90);
         double aWeel = 0;
-        double x =  (Math.random() * (this.getWidth() - docSize*2)) + docSize*2;
-        int y = (int) (Math.random() * (this.getHeight())) + 100;
+        double x = (Math.random() * (this.getWidth() - (docSize * 2))) + docSize * 2;
+        double y = (Math.random() * (this.getHeight() - 500)) + 500;
         int ray = 50;
         car = new Car(aCar, aWeel, x, y, ray);
     }
 
     void addDoc() {
         docSize = car.r * 1.5;
-        docX =  (Math.random() * (1000)) - docSize;
+        docX = (Math.random() * (1000)) - docSize;
     }
-
 
     double normalize(double posX) {
         double erro = posX - docX - docSize;
-//        if(erro > 0){
-//            erro -= docSize;
-//        } else{
-//            erro -= docSize * 2.5;
-//        }
         posX = erro / 10;
         return posX;
     }
@@ -85,7 +79,7 @@ public class ParkingLot extends JPanel implements Runnable {
         }
         b = false;
         g2.setColor(Color.RED);
-        g2.drawRect((int) (docX + docSize / 2), 0,(int) docSize, (int) docSize);
+        g2.drawRect((int) (docX + docSize / 2), 0, (int) docSize, (int) docSize);
 
         car.draw(g2);
     }
